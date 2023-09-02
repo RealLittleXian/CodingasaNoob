@@ -23,7 +23,7 @@ int c=guessnumber(mkn_number);
     printf("\ntry again? enter 'y' to replay. ");
     scanf("%s",&re);
     printf("\n");
-    if (re[0]=='y')
+    if (re[0]=='y')     //即if((re[0]=='y')=true)
     goto Y;
 
     return 0;

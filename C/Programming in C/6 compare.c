@@ -17,7 +17,11 @@ int main(void)
     system("pause");
 
     max = a>b?a:b;      //p065条件控制
-    printf("\nmax = %d\n",max);
+    printf("\nmax = %d\n",max);         /*利用条件运算符，更简易的写法是：
+    
+                                        max = (a > b) ? a ; b ;
+                                        
+                                        */
     
     return 0;
 }

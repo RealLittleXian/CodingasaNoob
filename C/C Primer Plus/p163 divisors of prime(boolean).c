@@ -9,6 +9,14 @@ unsigned long num,div;
 int main(){
     printf("please enter an integer for analysis:");
     printf("(enter 'q' to quit.)");
+
+    /*输入循环的模型：
+    
+    while(ch = getchar()!=STOP){
+        *code
+    }
+    
+    */
     while(scanf("%lu",&num)==1){
 
     for(div=2,isPrime=true;(div*div)<=num;div++){
@@ -23,7 +31,7 @@ int main(){
         }
     }
     
-    if (isPrime){
+    if (isPrime){       //即if(isPrime = true)
         printf("%lu is a prime.\n",num);
     }
     printf("enter another integer for analysis:");
