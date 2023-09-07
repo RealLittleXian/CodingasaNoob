@@ -15,7 +15,7 @@ int main(void){
 
     printf("this program computes the sum of the squares of "
     "integers in a range.\n");
-    printf("the lower bound shouldn't be less than &d and the "
+    printf("the lower bound shouldn't be less than %d and the "
     "upper bound shouldn't be more than %d.\n",MIN,MAX);
     printf("enter 0 for both limits to quit.\n");
 
@@ -51,7 +51,6 @@ return 0;
 int get_int(void){
     int input;
     char ch;
-
     while(scanf("%d",&input)!=1)    /*未能成功读入*/    {
         while (( ch=getchar() ) != '\n')
         {
@@ -59,9 +58,6 @@ int get_int(void){
         }
         printf(" is not an integer.\n"
         "please enter an integer value.");  
-        
-        /*疑惑：为什么这里可以直接把输入字符复现？*/
-    
     }
     return input;
 }
