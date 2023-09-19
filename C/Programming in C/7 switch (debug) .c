@@ -7,13 +7,13 @@ int main() {
 
     switch(num) {
         case '1':
-            printf("Number is 1\n");
+            printf("Number is 1.\n");
             break;
         case '2':
-            printf("Number is 2\n");
+            printf("Number is 2.\n");
             break;
         default:
-            printf("Number is not 1 or 2\n");
+            printf("Number is not 1 or 2.\n");
     }
 
     return 0;
