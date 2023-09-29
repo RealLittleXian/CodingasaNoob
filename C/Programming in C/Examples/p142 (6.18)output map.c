@@ -1,6 +1,6 @@
 #include<stdio.h>
 int main(){
-    int i,j,k,n;
+    int i,j,k;
     for ( i = 1; i <= 9; i++){
         printf("%3d",i);
     }
