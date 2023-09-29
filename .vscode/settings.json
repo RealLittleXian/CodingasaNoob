@@ -58,6 +58,7 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "files.associations": {
-    "TEXT.C": "cpp"
+    "TEXT.C": "cpp",
+    "math.h": "c"
   }
 }
