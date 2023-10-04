@@ -27,7 +27,6 @@ int findGCDwithRM(int num1,int num2) {
 
 int main() {
     int num1, num2;
-
     printf("Enter two numbers as \"num1,num2\": ");
     scanf("%d,%d",&num1,&num2);
 

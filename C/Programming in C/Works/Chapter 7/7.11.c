@@ -22,7 +22,7 @@ int main() {
 
             number += choice;
         } else {
-            int remainder = number % 3; //
+            int remainder = number % 3;
 
             if (remainder == 1) {
                 choice = 1;
@@ -40,7 +40,7 @@ int main() {
         currentPlayer = (currentPlayer + 1) % 2;
     }
 
-    if (currentPlayer == 0) {
+    if (currentPlayer != 0) {
         printf("you win!\n");
     } else {
         printf("computer wins.\n");
