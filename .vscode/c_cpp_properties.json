@@ -1,20 +1,19 @@
 {
     "configurations": [
         {
-            "name": "windows-clang-x64",
+            "name": "windows-gcc-x64",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/C/C Primer Plus"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "cStandard": "c17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "windows-clang-x64",
-            "compilerPath": "D:/Coding/MinGW/bin/g++.exe"
+            "cStandard": "${default}",
+            "cppStandard": "${default}",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerPath": "D:/Coding/MinGW/bin/gcc.exe"
         }
     ],
     "version": 4

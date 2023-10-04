@@ -2,19 +2,25 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug",
+      "name": "(gdb) Launch",
+      "preLaunchTask": "g++.exe build active file",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}\\bin\\${fileBasenameNoExtension}.exe",
+      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${fileDirname}",
+      "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": false,
-      "internalConsoleOptions": "neverOpen",
+      "externalConsole": true,
       "MIMode": "gdb",
-      "miDebuggerPath": "D:\\Coding\\MinGW\bin\\gdb.exe",
-      "preLaunchTask": "build"
+      "miDebuggerPath": "D:\\Coding\\MinGW\\bin\\gcc.exe",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     },
     {
       "name": "C/C++ Runner: Debug Session",
