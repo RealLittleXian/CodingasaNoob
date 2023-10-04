@@ -43,7 +43,7 @@ void correctSpelling(char* word, char** dictionary, int dictionarySize, char* co
 }
 
 int main() {
-    FILE* vocabularyFile = fopen("D:/Coding/Coding/Cpp/Works/Levenshitein Distance/vocabulary.txt", "r");
+    FILE* vocabularyFile = fopen("D:/Coding/Coding/C/Programming in C/Works/Levenshitein Distance/vocabulary.txt", "r");
     if (vocabularyFile == NULL) {
         printf("Unable to open vocabulary file.\n");
         return 1;
@@ -61,13 +61,13 @@ int main() {
     }
     fclose(vocabularyFile);
 
-    FILE* wordsFile = fopen("D:/Coding/Coding/Cpp/Works/Levenshitein Distance/words.txt", "r");
+    FILE* wordsFile = fopen("D:/Coding/Coding/C/Programming in C/Works/Levenshitein Distance/words.txt", "r");
     if (wordsFile == NULL) {
         printf("Unable to open words file.\n");
         return 1;
     }
 
-    FILE* outputFile = fopen("D:/Coding/Coding/Cpp/Works/Levenshitein Distance/words_correct.txt", "w");
+    FILE* outputFile = fopen("D:/Coding/Coding/C/Programming in C/Works/Levenshitein Distance/words_correct.txt", "w");
     if (outputFile == NULL) {
         printf("Unable to open output file.\n");
         return 1;
