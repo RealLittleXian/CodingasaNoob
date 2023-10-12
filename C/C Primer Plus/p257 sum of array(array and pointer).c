@@ -17,13 +17,13 @@ int main(void){
     
     for(int i=0;i<SIZE;i++){
 
-    while (scanf("%d",&input)!=1){
-        while ( (ch=getchar()) =='\n'){
-            putchar(ch);
+        while (scanf("%d",&input)!=1){
+            while ( (ch=getchar()) =='\n'){
+                putchar(ch);
+            }
+            printf(" is not an integer.\n"
+            "please enter an integer value.");
         }
-        printf(" is not an integer.\n"
-        "please enter an integer value.");
-    }
     marbles[i]=input;
     } 
     */
