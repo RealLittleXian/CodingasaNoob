@@ -108,7 +108,7 @@ FILE *vocabFile, *wordsFile, *correctWordsFile;
 char line[MAX_LINE_LENGTH];
 int lineNumber = 0;
 
-// Open the files
+// Open files
 vocabFile = fopen("D:/Coding/Coding/C/Programming in C/Works/Levenshitein Distance/vocabulary.txt", "r");
 wordsFile = fopen("D:/Coding/Coding/C/Programming in C/Works/Levenshitein Distance/words.txt", "r");
 correctWordsFile = fopen("D:/Coding/Coding/C/Programming in C/Works/Levenshitein Distance/words_correct.txt", "w");

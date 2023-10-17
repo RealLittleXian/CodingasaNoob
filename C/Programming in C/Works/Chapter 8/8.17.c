@@ -10,13 +10,11 @@ void multiply(int result[], int *size, int multiplier) {
         int product = result[i] * multiplier + carry;
         result[i] = product % 10;   //乘积的个位数存储到 result 数组中
         carry = product / 10;   //进位值更新为乘积的十位数
-        printf("result=%d, carry=%d\n",result[i],carry);
     }
     while (carry != 0) {
         result[*size] = carry % 10;
         carry /= 10;
         (*size)++;  //进位
-        printf("result=%d, carry=%d,(*size)++=%p\n",result[*size],carry,(*size)++);
     }
 }
 
@@ -33,7 +31,7 @@ void factorial(int n) {
 }
 
 int main() {
-    for ( int i = 1; i <= 5; i++)
+    for ( int i = 1; i <= COUNT; i++)
     {
         factorial(i);
         printf("\n");
