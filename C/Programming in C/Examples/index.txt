@@ -1,0 +1,9 @@
+p122 guess number.c
+    int srandom(void) 中的 srand(time(NULL)); 生成随机数
+
+p142 (6.18)output map.c
+    for 嵌套循环
+
+p161 fibonacci.c
+    long fib(int n) 递归计算 Fibonacci 数
+

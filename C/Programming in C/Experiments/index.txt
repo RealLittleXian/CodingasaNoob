@@ -1,0 +1,12 @@
+exp3_cod2.c
+    25 int* sequence = (int*)malloc(n * sizeof(int)); 动态分配内存
+    49 free(sequence); 释放内存
+
+exp4_cod1.c
+    应该复习年月日的算法
+
+exp4_cod2.c
+    bool isPrime(int n, int d) 素数的欧拉算法
+    
+exp4_cod3.c
+    类似 Fibonacci 的 Pell算法。

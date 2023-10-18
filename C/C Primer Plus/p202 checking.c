@@ -54,7 +54,7 @@ int get_int(void){
     while(scanf("%d",&input)!=1)    /*未能成功读入*/    {
         while (( ch=getchar() ) != '\n')
         {
-            putchar(ch);    //清除缓存区的字符
+            putchar(ch);    //输出并清除缓存区的字符
         }
         printf(" is not an integer.\n"
         "please enter an integer value.");  
@@ -64,27 +64,26 @@ int get_int(void){
 
 bool bad_limits(int a,int b,int low,int high){
 
-bool is_legitimate_input = true;
+    bool is_legitimate_input = true;
 
-if (a>b){
-    printf("%d is greater than %d\n",a,b);
-    is_legitimate_input = false;
-}
-if (a<low||b<low){
-    printf("values must be greater than %d\n",low);
-    is_legitimate_input = false;
-}
-if (a>high||b>high){
-    printf("values must be smaller than %d\n",high);
-    is_legitimate_input = false;
-}
-return is_legitimate_input;
+    if (a>b){
+        printf("%d is greater than %d\n",a,b);
+        is_legitimate_input = false;
+    }
+    if (a<low||b<low){
+        printf("values must be greater than %d\n",low);
+        is_legitimate_input = false;
+    }
+    if (a>high||b>high){
+        printf("values must be smaller than %d\n",high);
+        is_legitimate_input = false;
+    }
+    return is_legitimate_input;
 }
 
 double sum_squares(int a,int b){
     double total = 0;
     int i;
-
     for (i=a;i<=b;i++)
     total +=(i*i);
     return total;

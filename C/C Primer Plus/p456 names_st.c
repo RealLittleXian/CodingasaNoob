@@ -6,7 +6,7 @@
 void get_names(names * pn){
     int i=0;
 
-    printf("please enternyour first name:");
+    printf("please enter your first name:");
     fgets(pn->first,SLEN,stdin);
     while ((pn->first[i]!='\n') && (pn->first[i]!='\0'))
     {
@@ -24,7 +24,7 @@ void get_names(names * pn){
         }
     }
 
-    printf("please enternyour last name:");
+    printf("please enter your last name:");
     fgets(pn->last,SLEN,stdin);
     while ((pn->last[i]!='\n') && (pn->last[i]!='\0'))
     {

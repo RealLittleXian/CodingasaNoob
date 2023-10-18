@@ -1,3 +1,4 @@
+//十进制转二进制
 #include<stdio.h>
 
 void to_binary(unsigned long n);
@@ -6,8 +7,8 @@ int main(void){
     unsigned long num;
     printf("enter an integer, or 'q' to quit:");
 
-    while ( (scanf("%ul",&num)) == 1)
-    {        printf("binary equivalent:");
+    while ( (scanf("%ul",&num)) == 1) {        
+        printf("binary equivalent:");
         to_binary(num);
         putchar('\n');
         printf("enter another integer, or 'q' to quit:");
@@ -21,7 +22,7 @@ void to_binary(unsigned long n){
     int b;
     b=n%2;
     if(n>=2){
-        to_binary(n/2);
+        to_binary(n/2); //用递归算法
     }
     putchar('0'+b);
     return;

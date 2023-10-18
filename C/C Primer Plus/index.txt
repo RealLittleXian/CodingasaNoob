@@ -1,0 +1,9 @@
+p202 checking.c 
+    int get_int(void) 输入检查，值得经常复习。
+
+p228 binary(recursion).c
+    void to_binary(unsigned long n) 递归算法，十进制转二进制
+
+p257 sum of array(array and pointer).c
+    int sum_array(int ar[],int n) 和 
+    int sum_pointer(int *start,int *end) 表明数组与指针的一致性。
