@@ -1,6 +1,6 @@
 // arith.cpp -- some C++ arithmetic
 #include <iostream>
-int mian()
+int main()
 {
     using namespace std;
     float hats, heads;
