@@ -2,8 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "(gdb) Launch",
-      "preLaunchTask": "g++.exe build active file",
+      "type": "java",
+      "name": "GreedSnake",
+      "request": "launch",
+      "mainClass": "GreedSnake",
+      "projectName": "Coding_1a167743"
+    },
+    {
+      "name": "g++.exe build and debug active file",
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
@@ -13,14 +19,15 @@
       "environment": [],
       "externalConsole": true,
       "MIMode": "gdb",
-      "miDebuggerPath": "D:\\Coding\\MinGW\\bin\\gcc.exe",
+      "miDebuggerPath": "D:\\Coding\\minGW\\bin\\g++.exe",
       "setupCommands": [
         {
-          "description": "Enable pretty-printing for gdb",
+          "description": "为 gdb 启用整齐打印",
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
         }
-      ]
+      ],
+      "preLaunchTask": "task g++"
     },
     {
       "name": "C/C++ Runner: Debug Session",
@@ -29,8 +36,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "cwd": "c:/Users/GenLi/Desktop/exp9",
+      "program": "c:/Users/GenLi/Desktop/exp9/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
