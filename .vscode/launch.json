@@ -6,13 +6,6 @@
       "name": "GreedSnake",
       "request": "launch",
       "mainClass": "GreedSnake",
-      "projectName": "Coding_8bd937d6"
-    },
-    {
-      "type": "java",
-      "name": "GreedSnake",
-      "request": "launch",
-      "mainClass": "GreedSnake",
       "projectName": "Coding_1a167743"
     },
     {
