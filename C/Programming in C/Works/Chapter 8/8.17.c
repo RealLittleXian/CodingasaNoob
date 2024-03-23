@@ -1,3 +1,5 @@
+//高精度计算
+
 #include <stdio.h>
 #define COUNT 40
 
