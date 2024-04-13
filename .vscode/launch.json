@@ -6,6 +6,41 @@
       "name": "GreedSnake",
       "request": "launch",
       "mainClass": "GreedSnake",
+      "projectName": "Coding_8bd937d6"
+    },
+    {
+      "type": "java",
+      "name": "HelloWorld",
+      "request": "launch",
+      "mainClass": "HelloWorld",
+      "projectName": "Coding_8bd937d6"
+    },
+    {
+      "type": "java",
+      "name": "HelloWorld",
+      "request": "launch",
+      "mainClass": "Java.CS61B.HelloWorld",
+      "projectName": "Coding_8bd937d6"
+    },
+    {
+      "type": "java",
+      "name": "GreedSnake",
+      "request": "launch",
+      "mainClass": "Java.GreedSnake",
+      "projectName": "Coding_8bd937d6"
+    },
+    {
+      "type": "java",
+      "name": "HelloWorld",
+      "request": "launch",
+      "mainClass": "CS61B.HelloWorld",
+      "projectName": "Coding_8bd937d6"
+    },
+    {
+      "type": "java",
+      "name": "GreedSnake",
+      "request": "launch",
+      "mainClass": "GreedSnake",
       "projectName": "Coding_1a167743"
     },
     {
