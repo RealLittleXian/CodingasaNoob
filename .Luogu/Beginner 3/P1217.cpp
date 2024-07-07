@@ -1,5 +1,5 @@
-// cannot solve TLE
-
+// solved TLE
+/*
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -52,4 +52,49 @@ bool isPalindrome(long long n)
         return true;
     }
     return false;
+}
+*/
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+bool is_palindrome(int n) {
+    int original = n, reversed = 0;
+    while (n > 0) {
+        reversed = reversed * 10 + n % 10;
+        n /= 10;
+    }
+    return original == reversed;
+}
+
+bool is_prime(int n) {
+    if (n < 2) return false;
+    int sqrtN = sqrt(n);
+    for (int i = 2; i <= sqrtN; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+
+vector<int> find_palindromic_primes(int a, int b) {
+    vector<int> palindromic_primes;
+    for (int i = a; i <= b; i++) {
+        if (is_palindrome(i) && is_prime(i)) {
+            palindromic_primes.push_back(i);
+        }
+    }
+    return palindromic_primes;
+}
+
+int main() {
+    int a, b;
+    cin >> a >> b;
+    vector<int> palindromic_primes = find_palindromic_primes(a, b);
+    for (int p : palindromic_primes) {
+        cout << p << endl;
+    }
+    return 0;
 }
