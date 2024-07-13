@@ -2,6 +2,7 @@
 1. CUDA编程基本：
 - [An Even Easier Introduction to CUDA](https://developer.nvidia.com/blog/even-easier-introduction-cuda/) 
 - [CUDA C++ Programming Guide](https://docs.nvidia.com/cuda/cuda-c-programming-guide/) （无需从头读到尾，在实践过程中查阅）
+2. 编程实现在GPU上做矩阵乘法：
 - [matrixMul - Matrix Multiplication (CUDA Runtime API Version)](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/matrixMul)
 - [Matrix Multiplication Background User’s Guide
 ](https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html)
