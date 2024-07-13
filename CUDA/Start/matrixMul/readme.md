@@ -12,3 +12,7 @@
 
     根据 [Matrix Multiplication Background User's Guide
 ](https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html#mat-mat-multi) 进行学习，完成笔记
+
+- 2024.7.14
+
+    读完 [MatrixMul.cu](MatrixMul.cu) 代码。对cuda常见调用有了初步了解。
