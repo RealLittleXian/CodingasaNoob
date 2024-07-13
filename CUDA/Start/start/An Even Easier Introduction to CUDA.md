@@ -1,4 +1,21 @@
 # [An Even Easier Introduction to CUDA](https://developer.nvidia.com/blog/even-easier-introduction-cuda/#memory-allocation) #
+
+[Starting Simple](#starting-simple)
+
+[Memory Allocation in CUDA](#memory-allocation-in-cuda)
+
+[Picking up the Threads](#picking-up-the-threads)
+
+[Out of the Blocks](#out-of-the-blocks)
+
+## 关键字 ##
+ - [`__global__`](#1)
+ - [`cudaMallocManaged(), cudaFree()`](#2)
+ - [`cudaDeviceSynchronize()`](#4)
+ - [`<<< >>>`](#5)
+ - [`nvprof`](#6)
+ - [`threadIdx.x, blockDim.x, blockIdx.x, gridDim.x`](#7)
+
 ## Starting Simple ##
 
 A simple C++ program that adds the elements of two arrays with a million elements each.
@@ -45,17 +62,18 @@ int main(void)
 }
 ```
 
- - `__global__` tells the CUDA C++ compiler that this is a function that runs on the GPU and can be called from CPU code.
+ - <a id="1"></a>`__global__` tells the CUDA C++ compiler that this is a function that runs on the GPU and can be called from CPU code.
 ## Memory Allocation in CUDA ##
+<a id="2"></a>
 
  -   |C++          | CUDA                  |
      |-------------|-----------------------|
      | `malloc()`  | `cudaMallocManaged()` |
      | `delete []` | `cudaFree()`          |
-
+<a id="5"></a>
  -     add<<<1, 1>>>(N, x, y);
     launch the `add()` kernel, which invokes it on the GPU. CUDA kernel launches are specified using the triple angle bracket syntax `<<< >>>`.
-
+<a id="4"></a>
  -     cudaDeviceSynchronize();
     CPU wait until the kernel is done before it accesses the results.
 
@@ -112,7 +130,7 @@ Max error: 0
 ```
 
 ## Profile it! ##
-
+<a id="6"></a>
 the simplest way to find out how long the kernel takes to run is to run it with `nvprof`, the command line GPU profiler that comes with the CUDA Toolkit. 
 
 ## Picking up the Threads ##
@@ -149,7 +167,7 @@ void add(int n, float *x, float *y)
    add<<<numBlocks, blockSize>>>(N, x, y);
    ```
   
-
+<a id="7"></a>
 - CUDA 提供`gridDim.x`，其中包含网格中的块数，以及 `blockIdx.x`，其中包含网格中当前线程块的索引。
   ![cuda_indexing](cuda_indexing.png)
     图1说明了对数组（一维）进行索引的方法。每个线程索引获取：`index = blockIdx.x * blockDim.x + threadIdx.x` 
