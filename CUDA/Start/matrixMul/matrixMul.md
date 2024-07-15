@@ -1,5 +1,3 @@
-*借助ChatGPT理解
-
 ## MatrixMulCUDA() ##
 1. 线程和块索引：首先，通过blockIdx和threadIdx获取当前线程在块中的位置。
 2. 矩阵分块：将矩阵A和B分成多个小块，每个块的大小为BLOCK_SIZE。这样可以将大矩阵的乘法分解为多个小矩阵的乘法，从而利用GPU的并行计算能力。

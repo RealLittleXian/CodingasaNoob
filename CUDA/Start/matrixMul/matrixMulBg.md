@@ -1,4 +1,4 @@
-# [Matrix Multiplication](https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html#mat-mat-multi) #
+# [Matrix Multiplication Background](https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html#mat-mat-multi) #
 ## 关键字 ##
 - [GEMM](#1)
 - [数学限制与内存限制 Math And Memory Bounds](#2)
@@ -17,7 +17,7 @@ GEMM被定义为操作$C=\alpha AB$+$\beta C$
 
 计算此乘积需要`M * N * K`个融合乘加（fused multiply-adds, FMA）操作。每个FMA是2个操作，一个乘法和一个加法，因此需要总共2 * M * N * K个FLOPS。为简单起见，我们暂时忽略了α和β参数。
 
-***要估算特定矩阵乘法是数学限制还是内存限制***，我们将其算术强度与GPU的`ops:byte(运算:字节比)`进行比较，如 [4. Understanding Performance](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html#understand-perf) 所述。<a id="2"></a>
+***要估算特定矩阵乘法是数学限制还是内存限制***，我们将其算术强度与GPU的`ops:byte(运算:字节比)`进行比较，如 [Understanding Performance](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html#understand-perf) 所述。<a id="2"></a>
 >考虑一个简化模型，其中函数从内存中读取其输入，执行数学运算，然后将其输出写入内存。说$T_{mem}$时间花在访问内存上，$T_{math}$时间花在执行数学运算上。如果我们进一步假设不同线程的内存和数学部分可以重叠，则该函数的总时间为 $max(T_{mem},T_{math})$。两个时间中较长的时间表明了限制性能的原因：如果数学时间更长，我们说函数是**数学限制**的，如果内存时间更长，那么它就是**内存限制**的。
 >
 >$T_{math}>T_{mem}$可以表示为<math xmlns="http://www.w3.org/1998/Math/MathML"> <mrow> <mo> # </mo> <mi> ops </mi> <mtext fontfamily="Times New Roman"> </mtext> <mo> / </mo> <mtext fontfamily="Times New Roman"> </mtext> <msub> <mi> BW </mi> <mi> math </mi> </msub> <mtext fontfamily="Times New Roman"> </mtext> <mi> &gt; </mi> <mtext fontfamily="Times New Roman"> </mtext> <mo> # </mo> <mi> bytes </mi> <mtext fontfamily="Times New Roman"> </mtext> <mo> / </mo> <mtext fontfamily="Times New Roman"> </mtext> <msub> <mi> BW </mi> <mi> mem </mi> </msub> </mrow> </math>，即<math xmlns="http://www.w3.org/1998/Math/MathML"> <mrow> <mo> # </mo> <mi> ops </mi> <mtext fontfamily="Times New Roman"> </mtext> <mo> / </mo> <mtext fontfamily="Times New Roman"> </mtext> <mo> # </mo> <mi> bytes </mi> <mtext fontfamily="Times New Roman"> </mtext> <mi> &gt; </mi> <mtext fontfamily="Times New Roman"> </mtext> <msub> <mi> BW </mi> <mi> math </mi> </msub> <mtext fontfamily="Times New Roman"> </mtext> <mo> / </mo> <mtext fontfamily="Times New Roman"> </mtext> <msub> <mi> BW </mi> <mi> mem </mi> </msub> </mrow> </math>
@@ -83,9 +83,6 @@ While tile quantization means the problem size is quantized to the size of each 
 ## [matrixMul - 矩阵乘法（CUDA Runtime API版本）](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/matrixMul) ##
 ### 描述 ###
 此示例实现了矩阵乘法，与编程指南中的第6章完全相同。它被编写为便于说明各种CUDA编程原则，而不是为了提供最具性能的通用矩阵乘法核心。为了展示GPU矩阵乘性能，此示例还展示了如何使用新的CUDA 4.0界面用于CUBLAS，以展示高性能矩阵乘法。
-
-### 关键概念 ###
-CUDA Runtime API，线性代数
 
 ### 构建和运行 ###
 Windows
