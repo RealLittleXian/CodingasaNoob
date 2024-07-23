@@ -6,7 +6,7 @@
 - 深度学习操作的松散类别以及倾向于应用于每个操作的性能限制[(DNN 操作类别)](#5-dnn-operation-categories)
 ## 2. GPU Architecture Fundamentals ##
 NVIDIA® GPU 由许多 流式多处理器 （Streaming Multiprocessors, SM）、片上 L2 缓存（on-chip L2 cache）和高带宽 DRAM （high-bandwidth DRAM）组成。算术和其他指令由 SM 执行;数据和代码通过二级缓存从 DRAM 访问。每个SM都有自己的指令调度器和各种指令执行管道。
-![simpleGPUArch](simple-GPU-arch.svg)
+![simpleGPUArch](simple-gpu-arch.svg)
 乘法-加法 是现代神经网络中最常见的操作。每个乘法加法包含两个操作，因此将吞吐量乘以 2 以获得每个时钟的 FLOP 计数。再将其乘以 SM 数量和 SM 时钟频率获得 GPU 的 FLOPS 速率。
 
 $FLOPS\ rate = 2\ ×\ throughput\ ×\ number of\ SMs\ ×\ SM\ clock\ rate$
