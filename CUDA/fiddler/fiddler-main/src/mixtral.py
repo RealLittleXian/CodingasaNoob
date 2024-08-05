@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_sequence
 import transformers
 
-
+print("point1")
 class FiddlerMixtral:
     def __init__(self, args):
         self.dtype = torch.bfloat16
@@ -16,33 +16,40 @@ class FiddlerMixtral:
         self.model = transformers.MixtralForCausalLM.from_pretrained(
             args.model,
             torch_dtype=self.dtype,
-            # device_map='cpu',
+            device_map='cpu',
             use_cache=True,
         )
+        print("init done")
         self.lm_head = self.model.lm_head
+        print("lm_head done")
         self.model = self.model.model
+        print("model done")
         self.expert_placeholder = copy.deepcopy(
             self.model.layers[0].block_sparse_moe.experts[0]
         ).to(self.dev)
+        print("expert_placeholder done")
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
         self.tokenizer.pad_token = self.tokenizer.eos_token
+        print("tokenizer done")
         self.past_key_value = transformers.cache_utils.DynamicCache.from_legacy_cache()
         self.past_key_values_length = 0
+        print("past_key_value done")
         self.cpu_offload = args.cpu_offload
+        print("cpu_off;oad done")
         self.beam_width = args.beam_width
         self.n_layer = len(self.model.layers)
         self.n_expert = len(self.model.layers[0].block_sparse_moe.experts)
        
-
+        print("point2")
         # TODO: find this value based on device config
-        self.latency_cpu = 7
-        self.latency_gpu = 70
+        self.latency_cpu = 1
+        self.latency_gpu = 10
 
         self.cnt_expert_hit = 0
         self.cnt_expert_all = 0
 
         self.bring_non_expert_to_gpu()
-
+        print("point3")
         # 0: CPU, 1: GPU
         self.expert_loc = np.zeros((self.n_layer, self.n_expert), dtype=int)
         n_expert_on_gpu = self.calc_n_expert_on_gpu()
