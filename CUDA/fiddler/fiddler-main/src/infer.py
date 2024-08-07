@@ -7,7 +7,7 @@ from mixtral import FiddlerMixtral
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
     parser.add_argument(
         "--model",

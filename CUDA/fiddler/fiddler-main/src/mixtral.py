@@ -8,48 +8,40 @@ import torch.nn.functional as F
 from torch.nn.utils.rnn import pad_sequence
 import transformers
 
-print("point1")
+import tqdm
+
 class FiddlerMixtral:
     def __init__(self, args):
         self.dtype = torch.bfloat16
-        self.dev = torch.device("cuda:0")
+        self.dev = torch.device("cuda")
         self.model = transformers.MixtralForCausalLM.from_pretrained(
             args.model,
             torch_dtype=self.dtype,
             device_map='cpu',
             use_cache=True,
         )
-        print("init done")
         self.lm_head = self.model.lm_head
-        print("lm_head done")
         self.model = self.model.model
-        print("model done")
         self.expert_placeholder = copy.deepcopy(
             self.model.layers[0].block_sparse_moe.experts[0]
         ).to(self.dev)
-        print("expert_placeholder done")
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
         self.tokenizer.pad_token = self.tokenizer.eos_token
-        print("tokenizer done")
         self.past_key_value = transformers.cache_utils.DynamicCache.from_legacy_cache()
         self.past_key_values_length = 0
-        print("past_key_value done")
         self.cpu_offload = args.cpu_offload
-        print("cpu_off;oad done")
         self.beam_width = args.beam_width
         self.n_layer = len(self.model.layers)
         self.n_expert = len(self.model.layers[0].block_sparse_moe.experts)
        
-        print("point2")
         # TODO: find this value based on device config
         self.latency_cpu = 1
-        self.latency_gpu = 10
+        self.latency_gpu = 100
 
         self.cnt_expert_hit = 0
         self.cnt_expert_all = 0
 
         self.bring_non_expert_to_gpu()
-        print("point3")
         # 0: CPU, 1: GPU
         self.expert_loc = np.zeros((self.n_layer, self.n_expert), dtype=int)
         n_expert_on_gpu = self.calc_n_expert_on_gpu()
@@ -58,7 +50,7 @@ class FiddlerMixtral:
         )
 
         self.set_expert_loc(n_expert_on_gpu)
-        # print(self.expert_loc)
+        print(self.expert_loc)
 
         self.bring_expert_to_gpu()
 
@@ -78,6 +70,9 @@ class FiddlerMixtral:
 
     def set_expert_loc(self, n_expert_on_gpu, popular_experts=None):
         """Set the location of experts"""
+        torch.cuda.synchronize()
+        starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+        starter.record()
         if popular_experts is None:
             # list of (i_layer, i_expert) in the order of popularity
             # determined based on profile
@@ -343,6 +338,10 @@ class FiddlerMixtral:
         for i in range(n_expert_on_gpu):
             i_layer, i_expert = popular_experts[i]
             self.expert_loc[i_layer, i_expert] = 1
+        ender.record()
+        torch.cuda.synchronize()
+        curr_time = starter.elapsed_time(ender)
+        print('\nset_expert_loc time={}\n'.format(curr_time))
 
     def bring_expert_to_gpu(self):
         """Bring part of expert layers to GPU"""
@@ -378,7 +377,12 @@ class FiddlerMixtral:
         return output_tensor
 
     def generate(self, text=None, output_token=20, input_token=None):
-        torch.set_num_threads(16) # TODO: set appropriately
+        
+        torch.cuda.synchronize()
+        gen_starter, gen_ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+        gen_starter.record()
+        
+        torch.set_num_threads(256) # TODO: set appropriately
         self.past_key_value = transformers.cache_utils.DynamicCache.from_legacy_cache()
         self.past_key_values_length = 0
 
@@ -456,6 +460,12 @@ class FiddlerMixtral:
         print(f"Input: {text}")
         print(f"Output: {decode_strings[max_ids[0]]}")
 
+        
+        gen_ender.record()
+        torch.cuda.synchronize()
+        gen_curr_time = gen_starter.elapsed_time(gen_ender)
+        print('\ngenerate time={}\n'.format(gen_curr_time))        
+        
         return (
             prefill_time,
             decode_time,
@@ -485,8 +495,19 @@ class FiddlerMixtral:
         hidden_dim = self.model.config.hidden_size
         inps = input_ids.to(self.dev)
         inps = self.model.embed_tokens(inps)
-
+        
+        print('testing ...')
+        total_time, layer_count = 0, 0
+        
         for i_layer, layer in enumerate(self.model.layers):
+
+            torch.cuda.synchronize()
+            # iteration = 1
+            layer_starter, layer_ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+            # timings = np.zeros((iteration, 1))
+            layer_starter.record()
+                  
+            
             original_inps_shape = inps.shape
 
             inps_residual = inps
@@ -526,128 +547,167 @@ class FiddlerMixtral:
                     idx, top_2 = torch.where(expert_mask[i_expert])
 
                     if top_2.shape[0] == 0:
-                        # print(f"Expert {i_expert}: has no tokens")
+                        print(f"Expert {i_expert}: has no tokens")
                         continue
+                    
+                    torch.cuda.synchronize()
+                    
+                    iteration = 1
+                    starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+                    timings = np.zeros((iteration, 1))
+                    
+                    print('\n\n')
+                    for i_iter in tqdm.tqdm(range(iteration)):
+                        starter.record()
+                    
+                    
+                        
+                        top_2_list = top_2.tolist()
+                        idx_list = idx.tolist()
 
-                    # torch.cuda.synchronize()
-                    top_2_list = top_2.tolist()
-                    idx_list = idx.tolist()
-
-                    current_state = inps[None, top_2_list].reshape(-1, hidden_dim)
-                    if not is_cuda:
-                        self.expert_placeholder.load_state_dict(
-                            experts[i_expert].state_dict()
+                        current_state = inps[None, top_2_list].reshape(-1, hidden_dim)
+                        if not is_cuda:
+                            self.expert_placeholder.load_state_dict(
+                                experts[i_expert].state_dict()
+                            )
+                            current_state = self.expert_placeholder(
+                                current_state, routing_weights[top_2_list, idx_list, None]
+                            )
+                        else:
+                            current_state = experts[i_expert](
+                                current_state, routing_weights[top_2_list, idx_list, None]
+                            )
+                        inps_after_experts.index_add_(
+                            0, top_2, current_state.to(inps.dtype)
                         )
-                        current_state = self.expert_placeholder(
-                            current_state, routing_weights[top_2_list, idx_list, None]
-                        )
-                    else:
-                        current_state = experts[i_expert](
-                            current_state, routing_weights[top_2_list, idx_list, None]
-                        )
-                    inps_after_experts.index_add_(
-                        0, top_2, current_state.to(inps.dtype)
-                    )
 
-                    if not is_cuda:
-                        experts[i_expert] = experts[i_expert].to("cpu")
+                        if not is_cuda:
+                            experts[i_expert] = experts[i_expert].to("cpu")
 
-                    # end of one expert
+                        # end of one expert
+                        ender.record()
+                        torch.cuda.synchronize() # 等待GPU任务完成
+                        curr_time = starter.elapsed_time(ender) # 从 starter 到 ender 之间用时,单位为毫秒
+                        timings[i_iter] = curr_time
+
 
             else:
-                # prefill stage with offloading
-                expert_mask = torch.nn.functional.one_hot(
-                    selected_experts, num_classes=8
-                ).permute(2, 1, 0)
-
-                # first, calculate the number of tokens for each expert
-                idxs, top_2s = [], []
-                cost_per_expert = np.zeros(
-                    (len(experts), 2), dtype=float
-                )  # 0: CPU, 1: GPU
-                for i_expert in range(len(experts)):
-                    idx, top_2 = torch.where(expert_mask[i_expert])
-                    idxs.append(idx)
-                    top_2s.append(top_2)
-                    # expected latency at CPU: number of token * cost_at_cpu
-                    # expected latency at GPU: cost_at_gpu (constant)
-                    cost_per_expert[i_expert, 0] = top_2.shape[0] * self.latency_cpu
-                    cost_per_expert[i_expert, 1] = self.latency_gpu
-                    if self.is_expert_in_gpu(i_layer, i_expert):
-                        # if the expert is in GPU, the latency at GPU is
-                        # approximately 0
-                        cost_per_expert[i_expert, 1] = 0
-                        self.cnt_expert_hit += top_2.shape[0]
-                    self.cnt_expert_all += top_2.shape[0]
                 
-                # second, partition experts processing between CPU and GPU so that we can minimize:
-                # max(sum of cost at CPU, sum of cost at GPU)
-                # greedy algorithm is just as there are only 8 experts for Mixtral
-                best_config = -1
-                best_cost = float("inf")
-                for config in range(1 << len(experts)):
-                    sum_cost = 0
+                # random_input = torch.rand(256, 256).to('cuda')
+                # random_input = random_input.long()
+                # print('warm up ...\n')
+                # for _ in range(100):
+                #     _ = self.model(random_input)
+
+                                
+                    # prefill stage with offloading
+                    expert_mask = torch.nn.functional.one_hot(
+                        selected_experts, num_classes=8
+                    ).permute(2, 1, 0)
+
+                    # first, calculate the number of tokens for each expert
+                    idxs, top_2s = [], []
+                    cost_per_expert = np.zeros(
+                        (len(experts), 2), dtype=float
+                    )  # 0: CPU, 1: GPU
                     for i_expert in range(len(experts)):
-                        if (config >> i_expert) & 1:
-                            sum_cost += cost_per_expert[i_expert, 0]
+                        idx, top_2 = torch.where(expert_mask[i_expert])
+                        idxs.append(idx)
+                        top_2s.append(top_2)
+                        # expected latency at CPU: number of token * cost_at_cpu
+                        # expected latency at GPU: cost_at_gpu (constant)
+                        cost_per_expert[i_expert, 0] = top_2.shape[0] * self.latency_cpu
+                        cost_per_expert[i_expert, 1] = self.latency_gpu
+                        if self.is_expert_in_gpu(i_layer, i_expert):
+                            # if the expert is in GPU, the latency at GPU is
+                            # approximately 0
+                            cost_per_expert[i_expert, 1] = 0
+                            self.cnt_expert_hit += top_2.shape[0]
+                        self.cnt_expert_all += top_2.shape[0]
+                    
+                    # second, partition experts processing between CPU and GPU so that we can minimize:
+                    # max(sum of cost at CPU, sum of cost at GPU)
+                    # greedy algorithm is just as there are only 8 experts for Mixtral
+                    best_config = -1
+                    best_cost = float("inf")
+                    for config in range(1 << len(experts)):
+                        sum_cost = 0
+                        for i_expert in range(len(experts)):
+                            if (config >> i_expert) & 1:
+                                sum_cost += cost_per_expert[i_expert, 0]
+                            else:
+                                sum_cost += cost_per_expert[i_expert, 1]
+                        if sum_cost < best_cost:
+                            best_cost = sum_cost
+                            best_config = config
+
+                    # then, we can offload the experts according to the best
+                    # configuration
+                    cpu_experts = []
+                    gpu_experts = []
+                    for i_expert in range(8):
+                        if (best_config >> i_expert) & 1:
+                            cpu_experts.append(i_expert)
                         else:
-                            sum_cost += cost_per_expert[i_expert, 1]
-                    if sum_cost < best_cost:
-                        best_cost = sum_cost
-                        best_config = config
+                            gpu_experts.append(i_expert)
 
-                # then, we can offload the experts according to the best
-                # configuration
-                cpu_experts = []
-                gpu_experts = []
-                for i_expert in range(8):
-                    if (best_config >> i_expert) & 1:
-                        cpu_experts.append(i_expert)
-                    else:
-                        gpu_experts.append(i_expert)
+                    for i_expert in gpu_experts:
+                        top_2_list = top_2s[i_expert].tolist()
+                        idx_list = idxs[i_expert].tolist()
+                        current_state = inps[None, top_2_list].reshape(-1, hidden_dim)
+                        if self.is_expert_in_gpu(i_layer, i_expert):
+                            current_state = experts[i_expert](
+                                current_state, routing_weights[top_2_list, idx_list, None]
+                            )
+                        else:
+                            self.expert_placeholder.load_state_dict(
+                                experts[i_expert].state_dict()
+                            )
+                            current_state = self.expert_placeholder(
+                                current_state, routing_weights[top_2_list, idx_list, None]
+                            )
+                        inps_after_experts.index_add_(
+                            0,
+                            top_2s[i_expert].to(self.dev, non_blocking=True),
+                            current_state.to(self.dev, non_blocking=True),
+                        )
 
-                for i_expert in gpu_experts:
-                    top_2_list = top_2s[i_expert].tolist()
-                    idx_list = idxs[i_expert].tolist()
-                    current_state = inps[None, top_2_list].reshape(-1, hidden_dim)
-                    if self.is_expert_in_gpu(i_layer, i_expert):
-                        current_state = experts[i_expert](
-                            current_state, routing_weights[top_2_list, idx_list, None]
+                    for i_expert in cpu_experts:
+                        top_2_list = top_2s[i_expert].tolist()
+                        idx_list = idxs[i_expert].tolist()
+                        current_state = inps[None, top_2_list].reshape(-1, hidden_dim)
+                        current_state = self.run_expert_at_cpu(
+                            i_layer,
+                            i_expert,
+                            current_state.to("cpu"),
+                            routing_weights[top_2_list, idx_list, None].to("cpu"),
                         )
-                    else:
-                        self.expert_placeholder.load_state_dict(
-                            experts[i_expert].state_dict()
+                        inps_after_experts.index_add_(
+                            0,
+                            top_2s[i_expert].to(self.dev, non_blocking=True),
+                            current_state.to(self.dev, non_blocking=True),
                         )
-                        current_state = self.expert_placeholder(
-                            current_state, routing_weights[top_2_list, idx_list, None]
-                        )
-                    inps_after_experts.index_add_(
-                        0,
-                        top_2s[i_expert].to(self.dev, non_blocking=True),
-                        current_state.to(self.dev, non_blocking=True),
-                    )
-
-                for i_expert in cpu_experts:
-                    top_2_list = top_2s[i_expert].tolist()
-                    idx_list = idxs[i_expert].tolist()
-                    current_state = inps[None, top_2_list].reshape(-1, hidden_dim)
-                    current_state = self.run_expert_at_cpu(
-                        i_layer,
-                        i_expert,
-                        current_state.to("cpu"),
-                        routing_weights[top_2_list, idx_list, None].to("cpu"),
-                    )
-                    inps_after_experts.index_add_(
-                        0,
-                        top_2s[i_expert].to(self.dev, non_blocking=True),
-                        current_state.to(self.dev, non_blocking=True),
-                    )
 
             # addition because there's residual connection over moe layer
             inps = inps_residual + inps_after_experts.reshape(original_inps_shape)
-
+            
+            
+            
+            layer_ender.record()
+            torch.cuda.synchronize()
+            layer_curr_time = layer_starter.elapsed_time(layer_ender) # 从 starter 到 ender 之间用时,单位为毫秒
+            # timings[i_iter] = layer_curr_time
+            
+            total_time += layer_curr_time
+            layer_count += 1   
+            print('layer {count} inference time = {time} ms'.format(count=layer_count, time=layer_curr_time))
+            
             # end of one layer
-
+            
+        avg_time = total_time / layer_count
+        print('to generate the word -\ntotal inference time = {total} ms\navg layer inference time = {avg} ms\n'.format(total=total_time,avg=avg_time))
+        
+        
         inps = self.model.norm(inps)
         lm_logis = self.lm_head(inps)
 

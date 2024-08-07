@@ -86,20 +86,7 @@ CondaVerificationError: The package for pytorch located at C:\Users\GenLi\anacon
 
 Downloading and Extracting Packages: | 0%
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 8.6
 
 
 
