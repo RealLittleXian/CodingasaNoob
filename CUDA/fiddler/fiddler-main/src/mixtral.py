@@ -35,8 +35,8 @@ class FiddlerMixtral:
         self.n_expert = len(self.model.layers[0].block_sparse_moe.experts)
        
         # TODO: find this value based on device config
-        self.latency_cpu = 1
-        self.latency_gpu = 100
+        self.latency_cpu = 7
+        self.latency_gpu = 1
 
         self.cnt_expert_hit = 0
         self.cnt_expert_all = 0
@@ -50,7 +50,7 @@ class FiddlerMixtral:
         )
 
         self.set_expert_loc(n_expert_on_gpu)
-        print(self.expert_loc)
+        # print(self.expert_loc)
 
         self.bring_expert_to_gpu()
 
@@ -341,7 +341,7 @@ class FiddlerMixtral:
         ender.record()
         torch.cuda.synchronize()
         curr_time = starter.elapsed_time(ender)
-        print('\nset_expert_loc time={}\n'.format(curr_time))
+        print('set_expert_loc time={}'.format(curr_time))
 
     def bring_expert_to_gpu(self):
         """Bring part of expert layers to GPU"""
@@ -382,7 +382,7 @@ class FiddlerMixtral:
         gen_starter, gen_ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
         gen_starter.record()
         
-        torch.set_num_threads(256) # TODO: set appropriately
+        torch.set_num_threads(16) # TODO: set appropriately
         self.past_key_value = transformers.cache_utils.DynamicCache.from_legacy_cache()
         self.past_key_values_length = 0
 
@@ -473,6 +473,12 @@ class FiddlerMixtral:
         )
 
     def tokenize(self, text):
+        
+        torch.cuda.synchronize()
+        tok_starter, tok_ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
+        tok_starter.record()
+        
+        
         input_ids = []
         encodings = self.tokenizer(text, return_tensors="pt")
         input_id = encodings.input_ids.to(self.dev)
@@ -488,6 +494,13 @@ class FiddlerMixtral:
         )
         position_ids = position_ids.unsqueeze(0).view(-1, input_ids.shape[-1])
 
+
+        tok_ender.record()
+        torch.cuda.synchronize()
+        tok_curr_time = tok_starter.elapsed_time(tok_ender)
+        print('tokenize time={}'.format(tok_curr_time))        
+      
+      
         return input_ids, position_ids
 
     @torch.no_grad()
@@ -496,7 +509,7 @@ class FiddlerMixtral:
         inps = input_ids.to(self.dev)
         inps = self.model.embed_tokens(inps)
         
-        print('testing ...')
+        # print('testing ...')
         total_time, layer_count = 0, 0
         
         for i_layer, layer in enumerate(self.model.layers):
@@ -700,12 +713,12 @@ class FiddlerMixtral:
             
             total_time += layer_curr_time
             layer_count += 1   
-            print('layer {count} inference time = {time} ms'.format(count=layer_count, time=layer_curr_time))
+            # print('layer {count} inference time = {time} ms'.format(count=layer_count, time=layer_curr_time))
             
             # end of one layer
             
         avg_time = total_time / layer_count
-        print('to generate the word -\ntotal inference time = {total} ms\navg layer inference time = {avg} ms\n'.format(total=total_time,avg=avg_time))
+        print('to generate the word ---\ntotal inference time = {total} ms\navg layer inference time = {avg} ms'.format(total=total_time,avg=avg_time))
         
         
         inps = self.model.norm(inps)

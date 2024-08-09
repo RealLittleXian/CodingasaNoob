@@ -42,5 +42,5 @@ if __name__ == "__main__":
         args.input, output_token=args.n_token
     )
     print(
-        f"prefill_time: {prefill_time}, decode_time: {decode_time}, hit_rate: {hit_rate}"
+        f"prefill_time: {prefill_time}, decode_time: {decode_time}, hit_rate: {hit_rate}\n"
     )
