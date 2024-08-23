@@ -10,3 +10,4 @@
 - 2024.7.28 本地试运行了 Mistral-7B
 - 2024.8.2 未能解决一些意料之外的bug，改用远程环境。记录一些遇到的问题于[problems.md](./problems.md)
 - 2024.8.3 成功运行fiddler。接下来测试它的inference time和throughput
+- 2024.8.9 接下来测试 time: GPU to CPU,  CPU to GPU, CPU execution time, GPU execution time, 并对比

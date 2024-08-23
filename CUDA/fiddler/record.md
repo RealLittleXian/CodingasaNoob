@@ -483,3 +483,430 @@ prefill_time: 103.53702211380005, decode_time: 96.2875657081604, hit_rate: 0.277
 ```
 
 
+```
+root@job-9e568ffa-j289l:/workspace# nvidia-smi
+Thu Aug 15 15:17:12 2024
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.67                 Driver Version: 550.67         CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX A6000               Off |   00000000:50:00.0 Off |                  Off |
+| 30%   33C    P8             25W /  300W |       1MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+
+
+```
+root@job-9e568ffa-j289l:/workspace# python /workspace/fiddler/infer.py --model /share/models/Mixtral-8x7V-v0.1 --n-token 5 --beam-width 5
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████| 19/19 [00:03<00:00,  5.17it/s]
+Number of experts on GPU: 125/256
+set_expert_loc time=0.043136000633239746
+Model is ready.
+tokenize time=98.99199676513672
+to generate the word ---
+total inference time = 144535.6319580078 ms
+avg layer inference time = 4516.738498687744 ms
+to generate the word ---
+total inference time = 55197.53887939453 ms
+avg layer inference time = 1724.923089981079 ms
+to generate the word ---
+total inference time = 42539.26184940338 ms
+avg layer inference time = 1329.3519327938557 ms
+to generate the word ---
+total inference time = 20983.411754608154 ms
+avg layer inference time = 655.7316173315048 ms
+to generate the word ---
+total inference time = 36424.05732727051 ms
+avg layer inference time = 1138.2517914772034 ms
+--------------------
+Input: University of Washington is
+Output:  a higher education institution
+
+generate time=300042.875
+
+prefill_time: 144.59259963035583, decode_time: 155.16042757034302, hit_rate: 0.5628472222222223
+
+root@job-9e568ffa-j289l:/workspace# python /workspace/fiddler/infer.py --model /share/models/Mixtral-8x7V-v0.1 --n-token 9 --beam-width 3
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████| 19/19 [00:01<00:00, 17.89it/s]
+Number of experts on GPU: 125/256
+set_expert_loc time=0.03743999823927879
+Model is ready.
+tokenize time=17.29155158996582
+to generate the word ---
+total inference time = 25206.334144592285 ms
+avg layer inference time = 787.6979420185089 ms
+to generate the word ---
+total inference time = 13193.937543869019 ms
+avg layer inference time = 412.31054824590683 ms
+to generate the word ---
+total inference time = 8808.562959194183 ms
+avg layer inference time = 275.26759247481823 ms
+to generate the word ---
+total inference time = 16072.373579025269 ms
+avg layer inference time = 502.26167434453964 ms
+to generate the word ---
+total inference time = 22475.304527282715 ms
+avg layer inference time = 702.3532664775848 ms
+to generate the word ---
+total inference time = 19397.470160245895 ms
+avg layer inference time = 606.1709425076842 ms
+to generate the word ---
+total inference time = 14033.538375854492 ms
+avg layer inference time = 438.5480742454529 ms
+to generate the word ---
+total inference time = 13617.35901260376 ms
+avg layer inference time = 425.5424691438675 ms
+to generate the word ---
+total inference time = 15374.896589756012 ms
+avg layer inference time = 480.4655184298754 ms
+--------------------
+Input: University of Washington is
+Output:  a higher education institution located in King County
+
+generate time=148447.5625
+
+prefill_time: 25.349875450134277, decode_time: 123.00440526008606, hit_rate: 0.5641025641025641
+
+root@job-9e568ffa-j289l:/workspace# python /workspace/fiddler/infer.py --model /share/models/Mixtral-8x7V-v0.1 --n-token 100 --beam-width 10
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████| 19/19 [00:01<00:00, 18.86it/s]
+Number of experts on GPU: 125/256
+set_expert_loc time=0.04198399931192398
+Model is ready.
+tokenize time=21.81395149230957
+to generate the word ---
+total inference time = 38430.43920135498 ms
+avg layer inference time = 1200.9512250423431 ms
+to generate the word ---
+total inference time = 56904.75966453552 ms
+avg layer inference time = 1778.273739516735 ms
+to generate the word ---
+total inference time = 32014.099319458008 ms
+avg layer inference time = 1000.4406037330627 ms
+to generate the word ---
+total inference time = 26098.265045166016 ms
+avg layer inference time = 815.570782661438 ms
+to generate the word ---
+total inference time = 19591.575485229492 ms
+avg layer inference time = 612.2367339134216 ms
+to generate the word ---
+total inference time = 27480.637100219727 ms
+avg layer inference time = 858.7699093818665 ms
+to generate the word ---
+total inference time = 20427.586265563965 ms
+avg layer inference time = 638.3620707988739 ms
+to generate the word ---
+total inference time = 26190.90887451172 ms
+avg layer inference time = 818.4659023284912 ms
+to generate the word ---
+total inference time = 18634.16307067871 ms
+avg layer inference time = 582.3175959587097 ms
+to generate the word ---
+total inference time = 26307.246337890625 ms
+avg layer inference time = 822.101448059082 ms
+to generate the word ---
+total inference time = 17999.743255615234 ms
+avg layer inference time = 562.4919767379761 ms
+to generate the word ---
+total inference time = 26543.30825805664 ms
+avg layer inference time = 829.47838306427 ms
+to generate the word ---
+total inference time = 20608.697063446045 ms
+avg layer inference time = 644.0217832326889 ms
+to generate the word ---
+total inference time = 22497.64715576172 ms
+avg layer inference time = 703.0514736175537 ms
+to generate the word ---
+total inference time = 20906.310470581055 ms
+avg layer inference time = 653.322202205658 ms
+to generate the word ---
+total inference time = 25316.858428955078 ms
+avg layer inference time = 791.1518259048462 ms
+to generate the word ---
+total inference time = 20440.027172088623 ms
+avg layer inference time = 638.7508491277695 ms
+to generate the word ---
+total inference time = 22246.256774902344 ms
+avg layer inference time = 695.1955242156982 ms
+to generate the word ---
+total inference time = 22802.927947998047 ms
+avg layer inference time = 712.591498374939 ms
+to generate the word ---
+total inference time = 23709.590759277344 ms
+avg layer inference time = 740.924711227417 ms
+to generate the word ---
+total inference time = 22761.69384765625 ms
+avg layer inference time = 711.3029327392578 ms
+to generate the word ---
+total inference time = 21603.478622436523 ms
+avg layer inference time = 675.1087069511414 ms
+to generate the word ---
+total inference time = 23235.863883972168 ms
+avg layer inference time = 726.1207463741302 ms
+to generate the word ---
+total inference time = 23272.753356933594 ms
+avg layer inference time = 727.2735424041748 ms
+to generate the word ---
+total inference time = 22904.97095489502 ms
+avg layer inference time = 715.7803423404694 ms
+to generate the word ---
+total inference time = 21387.651626586914 ms
+avg layer inference time = 668.3641133308411 ms
+to generate the word ---
+total inference time = 24767.12973022461 ms
+avg layer inference time = 773.972804069519 ms
+to generate the word ---
+total inference time = 22815.995193481445 ms
+avg layer inference time = 712.9998497962952 ms
+to generate the word ---
+total inference time = 26022.94889831543 ms
+avg layer inference time = 813.2171530723572 ms
+to generate the word ---
+total inference time = 33660.21139526367 ms
+avg layer inference time = 1051.8816061019897 ms
+to generate the word ---
+total inference time = 16663.59008026123 ms
+avg layer inference time = 520.7371900081635 ms
+to generate the word ---
+total inference time = 32545.263732910156 ms
+avg layer inference time = 1017.0394916534424 ms
+to generate the word ---
+total inference time = 18997.050415039062 ms
+avg layer inference time = 593.6578254699707 ms
+to generate the word ---
+total inference time = 30714.222732543945 ms
+avg layer inference time = 959.8194603919983 ms
+to generate the word ---
+total inference time = 37231.768493652344 ms
+avg layer inference time = 1163.4927654266357 ms
+to generate the word ---
+total inference time = 35159.07159423828 ms
+avg layer inference time = 1098.7209873199463 ms
+to generate the word ---
+total inference time = 16790.039321899414 ms
+avg layer inference time = 524.6887288093567 ms
+to generate the word ---
+total inference time = 31677.417358398438 ms
+avg layer inference time = 989.9192924499512 ms
+to generate the word ---
+total inference time = 18072.42172241211 ms
+avg layer inference time = 564.7631788253784 ms
+to generate the word ---
+total inference time = 28760.483520507812 ms
+avg layer inference time = 898.7651100158691 ms
+to generate the word ---
+total inference time = 19558.392875671387 ms
+avg layer inference time = 611.1997773647308 ms
+to generate the word ---
+total inference time = 25689.19171142578 ms
+avg layer inference time = 802.7872409820557 ms
+to generate the word ---
+total inference time = 17725.227912902832 ms
+avg layer inference time = 553.9133722782135 ms
+to generate the word ---
+total inference time = 24366.637725830078 ms
+avg layer inference time = 761.4574289321899 ms
+to generate the word ---
+total inference time = 18925.136360168457 ms
+avg layer inference time = 591.4105112552643 ms
+to generate the word ---
+total inference time = 23787.052474975586 ms
+avg layer inference time = 743.3453898429871 ms
+to generate the word ---
+total inference time = 18903.907821655273 ms
+avg layer inference time = 590.7471194267273 ms
+to generate the word ---
+total inference time = 25461.456657409668 ms
+avg layer inference time = 795.6705205440521 ms
+to generate the word ---
+total inference time = 19456.680351257324 ms
+avg layer inference time = 608.0212609767914 ms
+to generate the word ---
+total inference time = 23200.642059326172 ms
+avg layer inference time = 725.0200643539429 ms
+to generate the word ---
+total inference time = 20919.20199584961 ms
+avg layer inference time = 653.7250623703003 ms
+to generate the word ---
+total inference time = 23156.679779052734 ms
+avg layer inference time = 723.646243095398 ms
+to generate the word ---
+total inference time = 21979.871505737305 ms
+avg layer inference time = 686.8709845542908 ms
+to generate the word ---
+total inference time = 22595.613395690918 ms
+avg layer inference time = 706.1129186153412 ms
+to generate the word ---
+total inference time = 20604.83278656006 ms
+avg layer inference time = 643.9010245800018 ms
+to generate the word ---
+total inference time = 20953.03426361084 ms
+avg layer inference time = 654.7823207378387 ms
+to generate the word ---
+total inference time = 21515.702339172363 ms
+avg layer inference time = 672.3656980991364 ms
+to generate the word ---
+total inference time = 21275.601486206055 ms
+avg layer inference time = 664.8625464439392 ms
+to generate the word ---
+total inference time = 23797.753791809082 ms
+avg layer inference time = 743.6798059940338 ms
+to generate the word ---
+total inference time = 22975.120681762695 ms
+avg layer inference time = 717.9725213050842 ms
+to generate the word ---
+total inference time = 24270.51414489746 ms
+avg layer inference time = 758.4535670280457 ms
+to generate the word ---
+total inference time = 21368.466888427734 ms
+avg layer inference time = 667.7645902633667 ms
+to generate the word ---
+total inference time = 24649.92430114746 ms
+avg layer inference time = 770.3101344108582 ms
+to generate the word ---
+total inference time = 21252.72593688965 ms
+avg layer inference time = 664.1476855278015 ms
+to generate the word ---
+total inference time = 26128.323112487793 ms
+avg layer inference time = 816.5100972652435 ms
+to generate the word ---
+total inference time = 22404.277725219727 ms
+avg layer inference time = 700.1336789131165 ms
+to generate the word ---
+total inference time = 24016.103477478027 ms
+avg layer inference time = 750.5032336711884 ms
+to generate the word ---
+total inference time = 20671.435317993164 ms
+avg layer inference time = 645.9823536872864 ms
+to generate the word ---
+total inference time = 25877.215606689453 ms
+avg layer inference time = 808.6629877090454 ms
+to generate the word ---
+total inference time = 19281.18620300293 ms
+avg layer inference time = 602.5370688438416 ms
+to generate the word ---
+total inference time = 24974.71947479248 ms
+avg layer inference time = 780.459983587265 ms
+to generate the word ---
+total inference time = 21663.041175842285 ms
+avg layer inference time = 676.9700367450714 ms
+to generate the word ---
+total inference time = 25187.571159362793 ms
+avg layer inference time = 787.1115987300873 ms
+to generate the word ---
+total inference time = 21050.95379638672 ms
+avg layer inference time = 657.842306137085 ms
+to generate the word ---
+total inference time = 24468.962356567383 ms
+avg layer inference time = 764.6550736427307 ms
+to generate the word ---
+total inference time = 19027.585357666016 ms
+avg layer inference time = 594.612042427063 ms
+to generate the word ---
+total inference time = 25980.165786743164 ms
+avg layer inference time = 811.8801808357239 ms
+to generate the word ---
+total inference time = 21175.6556930542 ms
+avg layer inference time = 661.7392404079437 ms
+to generate the word ---
+total inference time = 26133.73323059082 ms
+avg layer inference time = 816.6791634559631 ms
+to generate the word ---
+total inference time = 19827.796585083008 ms
+avg layer inference time = 619.618643283844 ms
+to generate the word ---
+total inference time = 25654.212310791016 ms
+avg layer inference time = 801.6941347122192 ms
+to generate the word ---
+total inference time = 19142.0160446167 ms
+avg layer inference time = 598.1880013942719 ms
+to generate the word ---
+total inference time = 26738.688598632812 ms
+avg layer inference time = 835.5840187072754 ms
+to generate the word ---
+total inference time = 20776.591262817383 ms
+avg layer inference time = 649.2684769630432 ms
+to generate the word ---
+total inference time = 25283.802734375 ms
+avg layer inference time = 790.1188354492188 ms
+to generate the word ---
+total inference time = 21192.894287109375 ms
+avg layer inference time = 662.277946472168 ms
+to generate the word ---
+total inference time = 24282.5753326416 ms
+avg layer inference time = 758.83047914505 ms
+to generate the word ---
+total inference time = 22187.304817199707 ms
+avg layer inference time = 693.3532755374908 ms
+to generate the word ---
+total inference time = 21307.564331054688 ms
+avg layer inference time = 665.861385345459 ms
+to generate the word ---
+total inference time = 21952.716438293457 ms
+avg layer inference time = 686.0223886966705 ms
+to generate the word ---
+total inference time = 22251.914070129395 ms
+avg layer inference time = 695.3723146915436 ms
+to generate the word ---
+total inference time = 22805.042686462402 ms
+avg layer inference time = 712.6575839519501 ms
+to generate the word ---
+total inference time = 19872.95677947998 ms
+avg layer inference time = 621.0298993587494 ms
+to generate the word ---
+total inference time = 23285.796325683594 ms
+avg layer inference time = 727.6811351776123 ms
+to generate the word ---
+total inference time = 19995.595916748047 ms
+avg layer inference time = 624.8623723983765 ms
+to generate the word ---
+total inference time = 24628.935089111328 ms
+avg layer inference time = 769.654221534729 ms
+to generate the word ---
+total inference time = 18538.36492919922 ms
+avg layer inference time = 579.3239040374756 ms
+to generate the word ---
+total inference time = 23619.055603027344 ms
+avg layer inference time = 738.0954875946045 ms
+to generate the word ---
+total inference time = 18681.63363647461 ms
+avg layer inference time = 583.8010511398315 ms
+to generate the word ---
+total inference time = 27087.454620361328 ms
+avg layer inference time = 846.4829568862915 ms
+--------------------
+Input: University of Washington is
+Output:  located in Seattle , Washington .
+
+ It is ranked as # 5 8 in Best National University .
+
+ K i pl inger ranking is  1 0 .
+
+ It is a public University .
+
+ Univers ity of Washington offers following types of degrees and certificate programs :
+
+ - Bachelor ' s degree
+ - Post b ac cal a ure ate certificate
+ - Master ' s degree
+ - Post - master ' s certificate
+ - Doctor ' s degree in research
+ - Doctor ' s
+
+generate time=2370554.75
+
+prefill_time: 38.581463098526, decode_time: 2331.719617128372, hit_rate: 0.5088040865384615
+
+root@job-9e568ffa-j289l:/workspace#
+```
