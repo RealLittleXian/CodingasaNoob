@@ -1,0 +1,56 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "方正仿宋_GBK-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/fangzheng-fangsong-jianti-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "方正新楷体_GBK-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/fangzheng-xinkaiti-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "方正姚体_GBK-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/fangzheng-xinyaoti-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "方正隶书_GBK-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/fangzheng-lishu-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "腾讯体-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/tencent-sans-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "腾讯体 W3-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/tencent-sans-w3-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "腾讯体 W7-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/tencent-sans-w7-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "汉仪中黑-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/HYZhongHeiTi-Level2-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "汉仪中黑-补充字库-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/HYZhongHeiTi-Level3-subset.ttf") format("ttf");
+  font-display: swap;
+}
+@font-face {
+  font-family: "造字工房芝士少女体-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/zaozigongfang-shaonv-subset.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "造字工房薄荷海盐体-subset";
+  src: url("https://docs.gtimg.com/common-cdn/ttf/zaozigongfang-haiyan-subset.woff") format("woff");
+  font-display: swap;
+}

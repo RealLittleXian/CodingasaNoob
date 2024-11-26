@@ -1,0 +1,74 @@
+`timescale 1ns / 1ps
+
+module flowing_water_lights(
+    input wire clk,
+    input wire rst,
+    input wire button,
+    input wire [1:0] freq_set,
+    input wire dir_set,
+    output reg [7:0] led
+);
+    reg [31:0] counter;
+    reg [3:0] current_led;
+    reg running;
+    reg [31:0] interval;
+
+    // 边沿检测寄存器
+    reg button_reg1, button_reg2, button_reg3;
+    wire button_edge;
+
+    // 时间间隔
+    always @(*) begin
+        case (freq_set)
+            2'b00: interval = 1000000; // 0.01s
+            2'b01: interval = 10000000; // 0.1s
+            2'b10: interval = 25000000; // 0.25s
+            2'b11: interval = 50000000; // 0.5s
+            default: interval = 1000000; // 默认 0.01s
+        endcase
+    end
+
+    // 边沿检测逻辑
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            button_reg1 <= 1'b0;
+            button_reg2 <= 1'b0;
+            button_reg3 <= 1'b0;
+        end else begin
+            button_reg1 <= button;
+            button_reg2 <= button_reg1;
+            button_reg3 <= button_reg2;
+        end
+    end
+
+    assign button_edge = button_reg2 & ~button_reg3; // 上升沿检测
+
+    // 状态机
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            led <= 8'b00000001; // 复位只亮LED0
+            current_led <= 4'b0000; // 当前亮灯
+            counter <= 32'b0; // 计数器清零
+            running <= 1'b0; // 初态停止
+        end else begin
+            // 边沿检测
+            if (button_edge) begin
+                running <= ~running; // 切换运行状态
+            end
+
+            if (running) begin
+                counter <= counter + 1;
+                if (counter >= interval) begin
+                    counter <= 32'b0; // 重置计数器
+                    // 移动灯光
+                    if (dir_set) begin
+                        current_led <= (current_led - 1 + 8) % 8; // 向左移动
+                    end else begin
+                        current_led <= (current_led + 1) % 8; // 向右移动
+                    end
+                    led <= 8'b00000001 << current_led;
+                end
+            end
+        end
+    end
+endmodule
