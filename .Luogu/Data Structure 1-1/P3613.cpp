@@ -8,9 +8,9 @@ using namespace std;
 int main()
 {
     int n, q, i, j, k, operation;
-    cin >> n >> q;'[]'
+    cin >> n >> q;
     map<int, map<int, int>> array;
-    for (int i = 0; i < q; i++)
+    for (int x = 0; x < q; x++)
     {
         cin >> operation >> i >> j;
         if (operation == 1)
@@ -20,7 +20,7 @@ int main()
         }
         if (operation == 2)
         {
-            cout << array[i][j];
+            cout << array[i][j] << endl;
         }
     }
     return 0;
