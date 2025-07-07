@@ -1,0 +1,23 @@
+{
+  "book_ranking": [
+    {
+      "book_id": "B001",
+      "title": "Java编程思想",
+      "author": "Bruce Eckel",
+      "borrow_count": 1
+    },
+    {
+      "book_id": "B005",
+      "title": "计算机网络",
+      "author": "Andrew Tanenbaum",
+      "borrow_count": 1
+    }
+  ],
+  "user_ranking": [
+    {
+      "user": "1",
+      "borrow_count": 2
+    }
+  ],
+  "generated_time": "2025-07-07 15:13:38"
+}

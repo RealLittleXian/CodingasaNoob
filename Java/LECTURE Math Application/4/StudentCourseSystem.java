@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Course {
+class Course {
     private String courseName;
     private String teacher;
     private String classTime;
@@ -89,7 +89,7 @@ class Student {
     }
 }
 
-class StudentCourseSystem {
+public class StudentCourseSystem {
     private static List<Student> students = new ArrayList<>();
     private static List<Course> courses = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
